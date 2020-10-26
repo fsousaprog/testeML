@@ -24,55 +24,19 @@ public class SimianService {
     private static final String SEQ_C = "CCCC";
     private static final String SEQ_G = "GGGG";
 
-    public void isJSONValid(JSONObject json) throws IOException {
-        try {
-            ArrayList<String> dna = (ArrayList<String>) json.get("dna");
-            if (dna != null && !dna.isEmpty()) {
-                if (dna.size() == 6) {
-                    for (String sequencia : dna) {
-                        if (sequencia.length() != 6 || sequencia.matches(".*\\d.*") || sequencia.matches(".[a-zBD-FH-SU-Z].*")) {
-                            throw new IOException("Cada sequência de dna deve ter 6 valores não numéricos, e apenas as letras maiúsculas: A, T, C, G");
-                        }
-                    }
-                } else {
-                    throw new IOException("Valor da tag 'dna' deve ter 6 campos separados por vírgula");
-                }
-            } else {
-                throw new IOException("tag 'dnaString' não encontrada");
-            }
-        } catch (Exception e) {
-            throw new IOException("JSON no formato incorreto");
-        }
-    }
-
     public Simian create(JSONObject simianJson) throws Exception {
-        try {
-            return new Simian(toStringArray((ArrayList<String>) simianJson.get("dna")));
-        } catch (Exception e) {
-            throw new Exception("JSON no formato incorreto");
-        }
-    }
-
-    public void add(Simian simian) {
-        //TODO
+        this.isJSONValid(simianJson);
+        return new Simian(toStringArray((ArrayList<String>) simianJson.get("dna")));
     }
 
     public boolean isSimian(String[] dna) {
-        char[][] grid;
+        char[][] grid = new char[LINHA][COLUNA];
         int i = 0;
         for (String sequencia : dna) {
             grid[i] = sequencia.toCharArray();
+            i++;
         }
-        grid = {
-                {'G', 'E', 'E', 'K', 'S', 'F', 'O', 'R', 'G', 'E', 'E', 'K', 'S'},
-                {'G', 'E', 'E', 'K', 'S', 'Q', 'U', 'I', 'Z', 'G', 'E', 'E', 'K'},
-                {'I', 'D', 'E', 'Q', 'A', 'P', 'R', 'A', 'C', 'T', 'I', 'C', 'E'}
-        };
 
-        return this.patternSearch(grid);
-    }
-
-    private boolean patternSearch(char[][] grid) {
         for (int r = 0; r < LINHA; r++) {
             for (int c = 0; c < COLUNA; c++) {
                 if (buscaEmVetor(grid, r, c)) {
@@ -88,11 +52,11 @@ public class SimianService {
 
         // Se não começar com, já tira a letra especifica das chances de sequencia
         String sequencia = SEQ_A;
-        if (grid[l][c] != SEQ_T.charAt(0)) {
+        if (grid[l][c] == SEQ_T.charAt(0)) {
             sequencia = SEQ_T;
-        } else if (grid[l][c] != SEQ_C.charAt(0)) {
+        } else if (grid[l][c] == SEQ_C.charAt(0)) {
             sequencia = SEQ_C;
-        } else if (grid[l][c] != SEQ_G.charAt(0)) {
+        } else if (grid[l][c] == SEQ_G.charAt(0)) {
             sequencia = SEQ_G;
         }
 
@@ -117,6 +81,27 @@ public class SimianService {
                 return true;
         }
         return false;
+    }
+
+    private void isJSONValid(JSONObject json) throws IOException {
+        try {
+            ArrayList<String> dna = (ArrayList<String>) json.get("dna");
+            if (dna != null && !dna.isEmpty()) {
+                if (dna.size() == 6) {
+                    for (String sequencia : dna) {
+                        if (sequencia.length() != 6 || sequencia.matches(".*\\d.*") || sequencia.matches(".*[a-zBD-FH-SU-Z].*")) {
+                            throw new IOException("Cada sequência de dna deve ter 6 valores não numéricos, e apenas as letras maiúsculas: A, T, C, G");
+                        }
+                    }
+                } else {
+                    throw new IOException("Valor da tag 'dna' deve ter 6 campos");
+                }
+            } else {
+                throw new IOException("Tag 'dna' não encontrada ou vazia");
+            }
+        } catch (Exception e) {
+            throw new IOException("JSON no formato incorreto: " + e.getMessage());
+        }
     }
 
 }

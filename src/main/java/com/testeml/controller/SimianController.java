@@ -23,10 +23,8 @@ public class SimianController {
     @PostMapping()
     public ResponseEntity<String> simian(@RequestBody JSONObject simian) {
         try {
-            this.simianService.isJSONValid(simian);
             Simian simianCreated = this.simianService.create(simian);
             if (this.simianService.isSimian(simianCreated.getDna())) {
-                this.simianService.add(simianCreated);
                 return ResponseEntity.status(OK).body(null);
             }
         } catch (Exception e) {
