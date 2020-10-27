@@ -6,9 +6,9 @@ Código fonte se encontra no github como privado, e foi dado
 acesso ao usuário *ITMLB* como colaborador.<br>
 Link: https://github.com/fsousaprog/testeML.git
 
-O app se encontra hospedado em uma instância da Amazon WS
-e pode ser utilizado via endpoint diponibilizado.<br> 
-URL:  
+O app se encontra disponível em uma instância do Google App Engine.<br> 
+URL: https://testemlsimian-lhyrswhb5q-rj.a.run.app <br>
+Endpoint: /simian
 
 * Para realizar a verificação de um simio, basta enviar um arquivo
 JSON via **POST** para o endpoint **/simian** contendo a 
